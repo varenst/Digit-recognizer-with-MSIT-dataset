@@ -1,9 +1,11 @@
 <template>
   <h1>Digit recognition with MSIT</h1>
-  
-  <section class="drawing-board">
-    <canvas id="drawing-board"></canvas>
-  </section>
+
+  <div id="toolbar">
+    <section class="drawing-board">
+      <canvas id="drawing-board"></canvas>
+    </section>
+  </div>
 
   <section class="info-panel">
     <div class="info-text">
@@ -27,10 +29,38 @@ export default {
   mounted() {
     const canvas = document.getElementById("drawing-board");
     const ctx = canvas.getContext("2d");
+
+    canvas.width = 800;
+    canvas.height = 300;
+
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let isPainting = false;
+    const lineWidth = 5;
+
+    const draw = (e) => {
+      if (!isPainting) return;
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = 'round';
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+    };
+
+    canvas.addEventListener('mousedown', () => {
+      isPainting = true;
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      isPainting = false;
+      ctx.stroke();
+      ctx.beginPath();
+    });
+
+    canvas.addEventListener('mousemove', draw);
   }
 }
+
 </script>
 
 <style scoped>
